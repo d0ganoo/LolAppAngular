@@ -1,0 +1,127 @@
+<div class="page">
+  <h1>Champions Versus</h1>
+
+  <div class="grid">
+    <!-- Choix -->
+    <section class="card">
+      <h2>Choix</h2>
+
+      <div class="champion-head">
+        <img class="champion-icon" [src]="championIconUrl()" alt="Champion" />
+        <div>
+          <div class="champion-name">{{ selectedChampionId() }}</div>
+          <div class="muted">Niveau {{ level() }}</div>
+        </div>
+      </div>
+
+      <label class="label">Champion</label>
+      <select
+        class="control"
+        [ngModel]="selectedChampionId()"
+        (ngModelChange)="setChampionId($event)"
+      >
+        <option *ngFor="let c of championList(); trackBy: trackById" [value]="c.id">
+          {{ c.name }} — {{ c.title }}
+        </option>
+      </select>
+
+      <label class="label">Niveau : <strong>{{ level() }}</strong></label>
+      <input
+        class="progress"
+        type="range"
+        min="1"
+        max="18"
+        [ngModel]="level()"
+        (ngModelChange)="setLevel($event)"
+      />
+
+      <div class="row">
+        <button class="btn" type="button" (click)="clearItems()">Vider items</button>
+        <span class="hint">{{ selectedItemIds().length }}/6</span>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="card" *ngIf="finalStats() as s; else loading">
+      <h2>Stats (niveau {{ level() }})</h2>
+
+      <div class="stats">
+        <div class="stat"><span>PV</span><strong>{{ s.hp | number:'1.0-0' }}</strong></div>
+        <div class="stat"><span>AD</span><strong>{{ s.attackdamage | number:'1.0-0' }}</strong></div>
+        <div class="stat"><span>AP</span><strong>{{ s.ap | number:'1.0-0' }}</strong></div>
+        <div class="stat"><span>Armure</span><strong>{{ s.armor | number:'1.0-0' }}</strong></div>
+        <div class="stat"><span>RM</span><strong>{{ s.spellblock | number:'1.0-0' }}</strong></div>
+        <div class="stat"><span>AS</span><strong>{{ s.attackspeed | number:'1.2-2' }}</strong></div>
+      </div>
+    </section>
+
+    <ng-template #loading>
+      <section class="card">
+        <h2>Stats</h2>
+        <p class="muted">Chargement…</p>
+      </section>
+    </ng-template>
+
+    <!-- Items -->
+    <section class="card full">
+      <div class="items-header">
+        <h2>Objets</h2>
+
+        <input
+          class="control search"
+          placeholder="Rechercher un objet…"
+          [ngModel]="itemSearch()"
+          (ngModelChange)="setItemSearch($event)"
+        />
+      </div>
+
+      <div class="shop-filters">
+        <button
+          type="button"
+          class="filter-pill"
+          *ngFor="let f of shopFilters; trackBy: trackById"
+          [class.active]="shopFilter() === f.key"
+          (click)="setShopFilter(f.key)"
+        >
+          {{ f.label }}
+        </button>
+      </div>
+
+      <!-- cache itemsMap() et selectedItemIds() en variables locales -->
+      <ng-container *ngIf="itemsMap() as map">
+        <ng-container *ngIf="selectedItemIds() as selectedIds">
+          <div class="chips" *ngIf="selectedIds.length > 0">
+            <button
+              type="button"
+              class="chip"
+              *ngFor="let id of selectedIds; trackBy: trackByStr"
+              (click)="removeItem(id)"
+              title="Cliquer pour retirer"
+            >
+              <img class="chip-icon" [src]="itemIconUrl(id)" alt="" />
+              <span class="chip-name">{{ map[id]?.name ?? ('Item ' + id) }}</span>
+              <span class="chip-x">✕</span>
+            </button>
+          </div>
+
+          <div class="items">
+            <button
+              type="button"
+              class="item"
+              *ngFor="let it of items(); trackBy: trackById"
+              (click)="addItem(it.id)"
+              [disabled]="!canAddItem(it.id)"
+              [attr.title]="!isSelectableItemId(it.id) ? 'Objet non sélectionnable (consommable/trinket)' : null"
+            >
+              <img class="item-icon" [src]="itemIconUrl(it.id)" alt="" />
+              <div class="item-text">
+                <span class="item-name">{{ it.name }}</span>
+                <span class="item-id">#{{ it.id }}</span>
+              </div>
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
+    </section>
+  </div>
+</div>
