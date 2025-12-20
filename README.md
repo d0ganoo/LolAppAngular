@@ -1,59 +1,103 @@
-# MonAppAnuglarLol
+# 🎮 Champions Analytics - Angular LOL
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Application interactive pour analyser les champions League of Legends. Comparez les statistiques en fonction du niveau du champion et des items équipés. Données officielles via l'API Data Dragon de Riot Games.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✨ Description
 
-```bash
-ng serve
-```
+Un outil complet et interactif permettant :
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 🔥 Analyse complète des champions
+- Statistiques détaillées (HP, Armor, Dégâts d'attaque, etc.)
+- Calcul dynamique des stats en fonction du niveau (1-18)
+- Visualisation des progressions par niveau
 
-## Code scaffolding
+### 🛍️ Système d'items complet
+- Catalogue complet des items League of Legends
+- Filtrage par catégorie (basique, épique, légendaire, etc.)
+- Application en temps réel des bonus d'items
+- Calcul des stats finales avec items
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🛠️ Technologies utilisées
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **Framework** : Angular 21 (Standalone Components)
+- **State Management** : Signals & Computed Signals
+- **Reactive Programming** : RxJS avec interop Signals/Observables
+- **APIs** : Riot Games Data Dragon
+- **Styling** : CSS custom
+- **Package Manager** : npm
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## 🚀 Installation
 
-To build the project run:
+### 🧰 Prérequis
 
-```bash
-ng build
-```
+- Node.js ≥ 18
+- npm ≥ 9
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### 1️⃣ Cloner le projet
 
 ```bash
-ng e2e
+git clone https://github.com/<ton-user>/<ton-repo>.git
+cd mon-app-anuglar-lol
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 2️⃣ Installer les dépendances
 
-## Additional Resources
+```bash
+npm install
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## ▶️ Lancer le projet en local
+
+```bash
+npm start
+```
+
+Une fois le serveur de développement lancé, ouvrez votre navigateur et accédez à :
+
+```
+http://localhost:4200/
+```
+
+L'application se rechargera automatiquement à chaque modification de fichier source.
+
+---
+
+## 🏗️ Structure du projet
+
+```
+src/
+├── app/
+│   ├── features/
+│   │   ├── home/                    # Page d'accueil
+│   │   └── champions-versus/        # Comparateur de champions
+│   ├── services/
+│   │   ├── ddragon.service.ts       # API Data Dragon
+│   │   └── champion-stats.service.ts # Calculs de stats
+│   ├── app.ts                       # Composant racine
+│   └── app.routes.ts                # Configuration des routes
+└── main.ts                          # Point d'entrée
+```
+
+---
+
+## 📝 Scripts disponibles
+
+```bash
+npm start              # Lancer le serveur de développement
+npm run build          # Compiler le projet pour la production
+npm run watch          # Build en mode watch
+npm test               # Lancer les tests unitaires
+npm run serve:ssr:mon-app-anuglar-lol      # Lancer avec SSR
+```
+
+---
+
+**Bon jeu ! 🎮**
