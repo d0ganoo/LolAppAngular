@@ -1,4 +1,3 @@
-// champion-stats.service.ts
 import { Injectable } from '@angular/core';
 
 type ChampStats = Record<string, number>;
@@ -17,7 +16,6 @@ export class ChampionStatsService {
       spellblock: add('spellblock', 'spellblockperlevel'),
       attackdamage: add('attackdamage', 'attackdamageperlevel'),
       attackspeed: (base['attackspeed'] ?? 0) * (1 + (L - 1) * ((base['attackspeedperlevel'] ?? 0) / 100)),
-      // etc.
     };
   }
 

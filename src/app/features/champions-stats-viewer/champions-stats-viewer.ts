@@ -6,124 +6,18 @@ import { switchMap } from 'rxjs';
 
 import { DdragonService } from '../../services/ddragon.service';
 import { ChampionStatsService } from '../../services/champion-stats.service';
-
-type DdChampion = { id: string; name: string; title: string };
-
-type DdItem = {
-  name: string;
-  tags?: string[];
-  maps?: Record<string, boolean>;
-  from?: string[];
-  into?: string[];
-  gold?: { purchasable?: boolean; total?: number };
-  stats?: Record<string, number>;
-
-  inStore?: boolean;
-  hideFromAll?: boolean;
-  requiredChampion?: string;
-  requiredAlly?: string;
-};
-
-type DdChampionDetail = {
-  stats: Record<string, number>;
-};
-
-type ShopFilter =
-  | 'all'
-  | 'starter'
-  | 'basic'
-  | 'epic'
-  | 'legendary'
-  | 'boots'
-  | 'consumable'
-  | 'trinket';
-
-type Classified = {
-  excluded: boolean;
-  isBoots: boolean;
-  isTrinket: boolean;
-  isConsumable: boolean;
-  isStarter: boolean;
-  isBasic: boolean;
-  isEpic: boolean;
-  isLegendary: boolean;
-  gold: number;
-};
-
-// ❌ À retirer de "Tous"
-const EXCLUDE_ITEM_IDS = new Set<string>([
-  '663058',
-  '663056',
-  '667109',
-  '664011',
-  '663060',
-  '663039',
-  '667101',
-  '667112',
-  '663064',
-  '323070',
-  '323003',
-  '323004',
-  '323119',
-  '326657',
-  '1105',
-  '1106',
-  '1107',
-  '326620',
-  '323504',
-  '323190',
-  '323002',
-  '323075',
-  '323110',
-  '323107',
-  '326621',
-  '326616',
-  '322065',
-  '323050',
-  '324005',
-  '323222',
-  '323109',
-  '663059',
-  '663146',
-  '664644',
-  '663193',
-  '332172',
-  '328020',
-  '326617',
-  '667666',
-]);
-
-// Forcer en "Légendaire"
-const FORCE_LEGENDARY_IDS = new Set<string>(['3877', '3869', '3871', '3870', '3876']);
-
-// Forcer bottes
-const FORCE_BOOTS = new Set<string>(['3172']);
-
-// Wardstone épique
-const WARDSTONE_EPIC_IDS = new Set<string>(['4638']);
-
-const EMPTY_CLASSIFIED: Classified = {
-  excluded: false,
-  isBoots: false,
-  isTrinket: false,
-  isConsumable: false,
-  isStarter: false,
-  isBasic: false,
-  isEpic: false,
-  isLegendary: false,
-  gold: 0,
-};
+import { DdChampion, DdItem, DdChampionDetail, ShopFilter, Classified } from './champions-stats-viewer.types';
+import { EXCLUDE_ITEM_IDS, FORCE_LEGENDARY_IDS, FORCE_BOOTS, WARDSTONE_EPIC_IDS, EMPTY_CLASSIFIED } from './champions-stats-viewer.constants';
 
 @Component({
   selector: 'app-champions-versus',
   standalone: true,
   imports: [CommonModule, FormsModule, DecimalPipe],
-  templateUrl: './champions-versus.html',
-  styleUrls: ['./champions-versus.css'],
+  templateUrl: './champions-stats-viewer.html',
+  styleUrls: ['./champions-stats-viewer.css'],
 })
 
-export class ChampionsVersus {
-  // UI
+export class ChampionsStatsViewer {
   selectedChampionId = signal('Aatrox');
   level = signal(1);
 
@@ -131,7 +25,6 @@ export class ChampionsVersus {
   shopFilter = signal<ShopFilter>('all');
   selectedItemIds = signal<string[]>([]);
 
-  // Data
   latestVersion!: ReturnType<typeof toSignal<string>>;
   champions!: ReturnType<typeof toSignal<any[]>>;
   itemsMap!: ReturnType<typeof toSignal<Record<string, DdItem>>>;
@@ -152,7 +45,6 @@ export class ChampionsVersus {
     );
   }
 
-  // Template helpers
   setChampionId(v: unknown) { this.selectedChampionId.set(String(v)); }
   setItemSearch(v: unknown) { this.itemSearch.set(String(v)); }
   setLevel(v: unknown) {
@@ -164,7 +56,6 @@ export class ChampionsVersus {
   trackById(_i: number, x: any) { return x?.id ?? _i; }
   trackByStr(_i: number, x: string) { return x; }
 
-  // Champions
   championList = computed((): DdChampion[] =>
     (this.champions() ?? [])
       .map((c: any) => ({ id: c.id, name: c.name, title: c.title }))
@@ -207,10 +98,6 @@ export class ChampionsVersus {
     return true;
   }
 
-  /**
-   * ✅ Classification mémoïsée
-   * Recalculée seulement si itemsMap change.
-   */
   private classifiedById = computed(() => {
     const map = this.itemsMap();
     const out: Record<string, Classified> = {};
@@ -226,12 +113,7 @@ export class ChampionsVersus {
     return this.classifiedById()[id] ?? EMPTY_CLASSIFIED;
   }
 
-  /**
-   * ⚙️ Logique de classification (une seule fois par itemId)
-   * => reprend EXACTEMENT tes règles.
-   */
   private classifyCore(id: string, it: DdItem): Classified {
-    // ❌ exclusions globales
     if (EXCLUDE_ITEM_IDS.has(id)) {
       return {
         excluded: true,
@@ -246,7 +128,6 @@ export class ChampionsVersus {
       };
     }
 
-    // ⭐ force legendary
     if (FORCE_LEGENDARY_IDS.has(id)) {
       return {
         excluded: false,
@@ -261,7 +142,6 @@ export class ChampionsVersus {
       };
     }
 
-    // ⭐ force boots
     if (FORCE_BOOTS.has(id)) {
       return {
         excluded: false,

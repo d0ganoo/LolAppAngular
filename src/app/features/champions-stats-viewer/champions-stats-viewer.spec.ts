@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChampionsVersus } from './champions-versus';
+import { ChampionsStatsViewer } from './champions-stats-viewer';
 
-describe('ChampionsVersus', () => {
-  let component: ChampionsVersus;
-  let fixture: ComponentFixture<ChampionsVersus>;
+describe('ChampionsStatsViewer', () => {
+  let component: ChampionsStatsViewer;
+  let fixture: ComponentFixture<ChampionsStatsViewer>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChampionsVersus]
+      imports: [ChampionsStatsViewer]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ChampionsVersus);
+    fixture = TestBed.createComponent(ChampionsStatsViewer);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
